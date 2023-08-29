@@ -5,12 +5,21 @@ import ButtonNextPage from "../../../components/ButtonNextPage";
 import * as productService from '../../../services/product-service';
 import { ProductDTO } from '../../../models/product';
 import { useEffect, useState } from 'react';
+import { CategoryDTO } from '../../../models/category';
 
 export default function Catalog() {
 
   const [products, setProducts] = useState<ProductDTO[]>([]);
 
+  const objTest : CategoryDTO = {
+    id: 8,
+    name: "Jardinagem"
+  }
+
   useEffect(() => {
+
+    localStorage.setItem("minhaCategoria", JSON.stringify(objTest));
+
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     productService.findAll()
       .then(response => {
