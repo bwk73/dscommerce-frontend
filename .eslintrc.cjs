@@ -27,6 +27,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-unsafe-call": "off",
-    "@typescript-eslint/no-floating-promises": "off"
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off"
   },
 }
