@@ -5,33 +5,29 @@ import ButtonNextPage from "../../../components/ButtonNextPage";
 import * as productService from '../../../services/product-service';
 import { ProductDTO } from '../../../models/product';
 import { useEffect, useState } from 'react';
-import { CategoryDTO } from '../../../models/category';
 
 export default function Catalog() {
 
   const [products, setProducts] = useState<ProductDTO[]>([]);
 
-  const objTest : CategoryDTO = {
-    id: 8,
-    name: "Jardinagem"
-  }
+  const [productName, setProductName] = useState("");
 
   useEffect(() => {
 
-    localStorage.setItem("minhaCategoria", JSON.stringify(objTest));
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    productService.findAll()
+    productService.findPageRequest(0, productName)
       .then(response => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         setProducts(response.data.content);
       });
-  }, []);
+  }, [productName]);
+
+  function handleSearch(searchText: string) {
+    setProductName(searchText)
+  }
 
   return (
     <main>
       <section id="catalog-section" className="dsc-container">
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
 
         <div className="dsc-catalog-cards dsc-mb20 dsc-mt20">
           {

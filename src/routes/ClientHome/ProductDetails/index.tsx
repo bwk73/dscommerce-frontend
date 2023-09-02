@@ -18,15 +18,12 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<ProductDTO>();
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/restrict-template-expressions
     productService.findById(Number(params.productId))
       .then(response => {
         console.log(response.data);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         setProduct(response.data);
       })
       .catch(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         navigate("/");
       });
   }, []);
