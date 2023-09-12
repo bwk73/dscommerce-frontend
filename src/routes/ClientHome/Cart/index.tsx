@@ -17,7 +17,7 @@ export default function Cart() {
 
   function handleIncreaseItem(productId: number) {
     cartService.increaseItem(productId);
-    setCart(cartService.getCart());
+    updateCart();
   }
 
   function handleDecreaseItem(productId: number) {
