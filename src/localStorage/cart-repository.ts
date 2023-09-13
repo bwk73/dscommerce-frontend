@@ -8,7 +8,6 @@ export function save(cart: OrderDTO) {
 
 export function get(): OrderDTO {
     const str = localStorage.getItem(CART_KEY) || '{"items":[]}';
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     const obj = JSON.parse(str) as OrderDTO;
 
     const cart = new OrderDTO();
