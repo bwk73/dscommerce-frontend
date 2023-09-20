@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import './styles.css';
 
-export default function ButtonNextPage() {
+type Props = {
+    onNextPage: Function;
+}
+
+export default function ButtonNextPage({onNextPage}: Props) {
 
     return (
-        <div className="dsc-btn-next-page">
+        <div onClick={() => onNextPage()} className="dsc-btn-next-page">
             Carregar mais
         </div>
     );
