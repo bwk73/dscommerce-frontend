@@ -1,16 +1,39 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Link, useParams } from "react-router-dom";
 import "./styles.css";
 import { useEffect, useState } from "react";
 import FormInput from "../../../components/FormInput";
 import * as forms from "../../../utils/forms";
 import * as productService from '../../../services/product-service';
+import * as categoryService from '../../../services/category-service';
 import FormTextArea from "../../../components/FormTextArea";
+import { CategoryDTO } from "../../../models/category";
+import FormSelect from "../../../components/FormSelect";
 
 export default function ProductForm() {
 
   const params = useParams();
 
   const isEditing = params.productId !== 'create';
+
+  useEffect(() => {
+    if (isEditing) {
+        productService.findById(Number(params.productId))
+          .then(response => {
+              const newFormData = forms.updateAll(formData, response.data);
+              setFormData(newFormData);
+          })
+    }
+  }, []);
+
+  const [categories, setCategories] = useState<CategoryDTO[]>([]);
+
+  useEffect(() => {
+      categoryService.findAllRequest()
+          .then(response => {
+              setCategories(response.data);
+          })
+  }, []);
 
   const [formData, setFormData] = useState<any>({
     name: {
@@ -52,18 +75,18 @@ export default function ProductForm() {
         return /^.{10,}$/.test(value);
       },
       message: "Descrição mínima de 10 caracteres"
+    },
+    categories: {
+      value: [],
+      id: "categories",
+      name: "categories",
+      placeholder: "Categorias",
+      validation: function(value: CategoryDTO[]) {
+        return value.length > 0;
+      },
+      message: "Escolha ao menos uma categoria"
     }
   });
-
-  useEffect(() => {
-    if (isEditing) {
-        productService.findById(Number(params.productId))
-          .then(response => {
-              const newFormData = forms.updateAll(formData, response.data);
-              setFormData(newFormData);
-          })
-    }
-  }, []);
 
   function handleInputChange(event: any) {
     setFormData(forms.updateAndValidate(formData, event.target.name, event.target.value));
@@ -82,7 +105,7 @@ export default function ProductForm() {
               <div className="dsc-form-controls-container">
                   <div>
                       <FormInput
-                          { ...formData.name }
+                          {...formData.name}
                           className="dsc-form-control"
                           onTurnDirty={handleTurnDirty}
                           onChange={handleInputChange}
@@ -91,7 +114,7 @@ export default function ProductForm() {
                   </div>
                   <div>
                       <FormInput
-                          { ...formData.price }
+                          {...formData.price}
                           className="dsc-form-control"
                           onTurnDirty={handleTurnDirty}
                           onChange={handleInputChange}
@@ -100,15 +123,31 @@ export default function ProductForm() {
                   </div>
                   <div>
                       <FormInput
-                          { ...formData.imgUrl }
+                          {...formData.imgUrl}
                           className="dsc-form-control"
                           onTurnDirty={handleTurnDirty}
                           onChange={handleInputChange}
                       />
                   </div>
                   <div>
+                      <FormSelect 
+                          {...formData.categories}
+                          className="dsc-form-control"
+                          options={categories} 
+                          onChange={(obj:any) => {
+                              const newFormData = forms.updateAndValidate(formData, "categories", obj);
+                              setFormData(newFormData);
+                          }}
+                          onTurnDirty={handleTurnDirty}
+                          isMulti
+                          getOptionLabel={(obj:any) => obj.name}
+                          getOptionValue={(obj:any) => String(obj.id)}
+                      />
+                      <div className="dsc-form-error">{formData.categories.message}</div>
+                  </div>
+                  <div>
                       <FormTextArea
-                          { ...formData.description }
+                          {...formData.description}
                           className="dsc-form-control dsc-textarea"
                           onTurnDirty={handleTurnDirty}
                           onChange={handleInputChange}
